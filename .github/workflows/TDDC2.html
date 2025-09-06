@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certis: Digital Transformation Strategy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-400: #94a3b8;
+            --slate-300: #cbd5e1;
+            --slate-200: #e2e8f0;
+            --sky-400: #38bdf8;
+            --sky-500: #0ea5e9;
+            --teal-400: #2dd4bf;
+            --amber-400: #fbbd23;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--slate-900);
+            color: var(--slate-200);
+            scroll-behavior: smooth;
+        }
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 5rem 2rem;
+            border-bottom: 1px solid var(--slate-800);
+            background-image: radial-gradient(circle at top left, rgba(30, 41, 59, 0.3), transparent 40%),
+                              radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.1), transparent 30%);
+        }
+        .card {
+            background-color: var(--slate-800);
+            border-radius: 1rem;
+            padding: 2.5rem;
+            border: 1px solid var(--slate-700);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(30, 144, 255, 0.1), 0 10px 10px -5px rgba(30, 144, 255, 0.08);
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .nav-link.active, .nav-link:hover {
+            color: var(--sky-400);
+            transform: scale(1.1);
+        }
+        .prototype-card {
+            cursor: pointer;
+            border-color: var(--slate-700);
+        }
+        .prototype-card.selected {
+            border-color: var(--sky-400);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+            background-color: #334155;
+        }
+        #prototype-display {
+            background: url('https://placehold.co/1200x600/0f172a/1e293b?text=Select+a+Sector') center center/cover;
+            transition: all 0.5s ease-in-out;
+        }
+        .widget {
+            background-color: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--slate-700);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+        .widget:hover {
+            transform: scale(1.05);
+            background-color: rgba(51, 65, 85, 0.8);
+        }
+        .widget-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--sky-400);
+        }
+        .widget-value {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+        .widget-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--slate-300);
+        }
+        .widget-details {
+            font-size: 0.875rem;
+            color: var(--slate-400);
+            margin-top: 0.5rem;
+        }
+        .critical { color: #f87171; }
+        .ok { color: #4ade80; }
+        .highlight {
+            background: -webkit-linear-gradient(45deg, var(--sky-400), var(--teal-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .icon-bullet {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .icon-bullet svg {
+            flex-shrink: 0;
+            width: 1.75rem;
+            height: 1.75rem;
+            margin-top: 0.25rem;
+            color: var(--teal-400);
+        }
+    </style>
+</head>
+<body class="relative">
+
+    <nav class="fixed top-0 left-0 h-full w-16 md:w-48 bg-slate-900/80 backdrop-blur-sm z-50 flex flex-col items-center py-8 border-r border-slate-800">
+        <div class="font-extrabold text-xl hidden md:block highlight">CERTIS+</div>
+        <div class="font-extrabold text-xl md:hidden highlight">C+</div>
+        <ul id="nav-menu" class="mt-12 space-y-6 flex-grow flex flex-col items-center md:items-start md:px-4">
+        </ul>
+    </nav>
+
+    <main class="ml-16 md:ml-48">
+        <section id="slide-1" class="slide" data-title="Home">
+            <div class="text-center">
+                <span class="text-sky-400 font-semibold tracking-wider">CERTIS CASE STUDY ANALYSIS</span>
+                <h1 class="text-4xl md:text-6xl font-extrabold mt-2 bg-clip-text text-transparent bg-gradient-to-r from-slate-100 to-slate-400">Orchestrating the Supply Chain of Services</h1>
+                <p class="mt-6 max-w-3xl mx-auto text-lg text-slate-300">An in-depth analysis of Certis's pivotal transformation from a traditional security provider to a technology-driven, integrated services leader, with actionable recommendations for future dominance.</p>
+            </div>
+        </section>
+
+        <section id="slide-2" class="slide" data-title="Journey">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-10">The Transformation Journey</h2>
+            <div class="grid lg:grid-cols-2 gap-8 w-full max-w-7xl">
+                <div class="card">
+                    <h3 class="font-bold text-xl text-sky-400 mb-4">From BPRO® to Security+</h3>
+                    <p class="text-slate-300 mb-4">Certis's transformation was a strategic evolution. The <strong class="text-slate-100">BPRO®</strong> model focused on process optimization to cut manpower costs, an efficiency-driven approach key to capturing Singapore's mall security market.</p>
+                    <p class="text-slate-300">Facing saturation, Certis pivoted to the <strong class="text-slate-100">Security+</strong> model—a fundamental shift from cost-saving vendor to value-creation partner. This integrated three core pillars on its "Mozart" platform:</p>
+                    <!-- Security+ Pillars Visual -->
+                    <div class="mt-6 flex justify-around text-center">
+                        <div class="flex flex-col items-center">
+                            <svg class="w-16 h-16 mb-2 text-teal-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            <p class="font-semibold">Core Security</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <svg class="w-16 h-16 mb-2 text-teal-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/></svg>
+                            <p class="font-semibold">Facilities Mgmt</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <svg class="w-16 h-16 mb-2 text-teal-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+                            <p class="font-semibold">Guest Services</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                     <h3 class="font-bold text-xl text-sky-400 mb-4">A Decade of Explosive Growth</h3>
+                     <p class="text-slate-400 mb-4">This strategic shift, coupled with visionary leadership, fueled a nearly ten-fold increase in revenue, transforming Certis into a billion-dollar enterprise.</p>
+                     <div>
+                        <canvas id="revenueChart"></canvas>
+                     </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="slide-3" class="slide" data-title="Growth">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-10">Growth Engine: New Sectors & Global Expansion</h2>
+            <div class="grid md:grid-cols-2 gap-8 w-full max-w-7xl">
+                <div class="card">
+                    <h3 class="font-bold text-xl text-sky-400 mb-4">Strategic Sector Expansion</h3>
+                    <p class="text-slate-300 mb-6">The Security+ platform is an "operational orchestration engine." Certis should target sectors where operational downtime is catastrophic and efficiency gains are paramount.</p>
+                    <ul class="space-y-4">
+                        <li class="font-semibold text-slate-200"><strong>1. Critical Infrastructure Management:</strong> Ports, data centers, and power plants. Here, Security+ can integrate physical security with operational monitoring and predictive maintenance, offering a holistic "resilience-as-a-service" package.</li>
+                        <li class="font-semibold text-slate-200"><strong>2. Integrated Healthcare Campuses:</strong> Move beyond security to orchestrate the entire non-clinical hospital environment, managing patient flow, sanitization robots, and critical equipment uptime.</li>
+                        <li class="font-semibold text-slate-200"><strong>3. Smart Logistics & Automated Warehousing:</strong> Provide the central nervous system for "lights out" warehouses by managing AGV fleets, monitoring assets, and securing the supply chain with drone surveillance.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 class="font-bold text-xl text-sky-400 mb-4">Blueprint for Global Expansion</h3>
+                    <p class="text-slate-300 mb-6">A phased strategy is required to overcome the "incumbent disadvantage" and adapt to local market dynamics.</p>
+                     <!-- Global Expansion Visual -->
+                     <div class="space-y-4">
+                        <div class="flex items-center gap-4">
+                            <div class="flex-shrink-0 bg-sky-500 rounded-full w-12 h-12 flex items-center justify-center font-bold text-white">1</div>
+                            <div>
+                                <h4 class="font-bold">Replicate & Dominate (1-2 Yrs)</h4>
+                                <p class="text-slate-400">Target high labor-cost markets (Australia, UK) to establish new "lighthouse" projects.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="flex-shrink-0 bg-sky-500 rounded-full w-12 h-12 flex items-center justify-center font-bold text-white">2</div>
+                            <div>
+                                <h4 class="font-bold">Adapt & Acquire (2-4 Yrs)</h4>
+                                <p class="text-slate-400">Enter complex markets (NA, EU) by acquiring local tech/FM firms and integrating them onto the Mozart platform.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="flex-shrink-0 bg-sky-500 rounded-full w-12 h-12 flex items-center justify-center font-bold text-white">3</div>
+                            <div>
+                                <h4 class="font-bold">Scale via Platform (4+ Yrs)</h4>
+                                <p class="text-slate-400">License the Mozart platform as a SaaS solution in emerging markets for scalable, high-margin revenue.</p>
+                            </div>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="slide-4" class="slide" data-title="Recommendations">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-10">Sustaining the Momentum: Key Recommendations</h2>
+            <div class="grid lg:grid-cols-2 gap-8 w-full max-w-7xl">
+                <div class="card">
+                    <h3 class="font-bold text-xl text-sky-400 mb-4">Sustaining Transformation Momentum</h3>
+                    <p class="text-slate-300">Transformation is a perpetual state. Certis must embed continuous evolution into its DNA through two core strategies:</p>
+                     <div class="icon-bullet">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A11.953 11.953 0 0112 16.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0021 12c0-1.291-.31-2.506-.867-3.575M3.284 14.253A11.953 11.953 0 0012 16.5c2.998 0 5.74-1.1 7.843-2.918m-15.686 0A8.959 8.959 0 003 12c0-1.291.31-2.506.867-3.575m0 0A11.953 11.953 0 0012 10.5c2.998 0 5.74-1.1 7.843-2.918"/></svg>
+                        <div>
+                            <h4 class="font-semibold text-slate-200">Evolve to an Open Ecosystem</h4>
+                            <p class="text-slate-400">Transition Mozart from an internal tool to an open platform with APIs. This invites clients and third-party developers to build custom solutions, creating a powerful network effect and a competitive moat that is nearly impossible for rivals to cross.</p>
+                        </div>
+                    </div>
+                     <div class="icon-bullet">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+                        <div>
+                            <h4 class="font-semibold text-slate-200">Institute a "Venture Board"</h4>
+                            <p class="text-slate-400">Create an internal board that acts like a venture capital firm for employee-led innovations. Teams can pitch new services, and if funded, get resources to develop a minimum viable product, fostering intrapreneurship.</p>
+                        </div>
+                    </div>
+                </div>
+                 <div class="card">
+                    <h3 class="font-bold text-xl text-sky-400 mb-4">Pillars of Future Growth: Innovation, Talent, & Scaling</h3>
+                    <p class="text-slate-300">To stay ahead, Certis must focus its efforts on three interconnected fronts:</p>
+                     <div class="icon-bullet">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c.251.047.502.1.752.172m-1.5 0c-.251.047-.502.1-.752.172m3.75 0c.251.047.502.1.752.172m-4.5 0c.251.047.502.1.752.172m0 0a2.25 2.25 0 003 0m0 0c.251.047.502.1.752.172m-.752-.172c-.251.047-.502.1-.752.172m2.25-4.024v5.714c0 .921-.446 1.754-1.159 2.288L12.5 14.5M14.25 3.104c-.251.047-.502.1-.752.172m1.5 0c.251.047.502.1.752.172m-3.75 0c-.251.047-.502.1-.752.172m4.5 0c-.251.047-.502.1-.752.172m0 0a2.25 2.25 0 01-3 0m0 0c-.251.047-.502.1-.752.172m.752.172c.251.047.502.1.752.172M8.25 14.5l-3.5 3.5m0 0l3.5-3.5m-3.5 3.5v-3.5m3.5 3.5h-3.5m10.5-3.5l-3.5 3.5m0 0l3.5-3.5m-3.5 3.5v-3.5m3.5 3.5h-3.5"/></svg>
+                        <div>
+                            <h4 class="font-semibold text-slate-200">Next-Gen Innovation: Predictive Operations</h4>
+                            <p class="text-slate-400">Move from reactive monitoring to predictive orchestration using AI and Digital Twins to simulate scenarios and preemptively address issues. This is a high-margin service that moves Certis up the value chain.</p>
+                        </div>
+                    </div>
+                    <div class="icon-bullet">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+                        <div>
+                            <h4 class="font-semibold text-slate-200">Talent Magnetism: The "Certis Digital" Brand</h4>
+                            <p class="text-slate-400">Launch a "Certis Digital" sub-brand that operates with the culture and compensation of a tech startup to attract elite engineers and data scientists who would not typically consider a traditional security firm.</p>
+                        </div>
+                    </div>
+                     <div class="icon-bullet">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/></svg>
+                        <div>
+                            <h4 class="font-semibold text-slate-200">Scaling Approach: "Security+ in a Box"</h4>
+                            <p class="text-slate-400">Productize solutions into templated, vertical-specific deployment kits (e.g., "Certis for Retail Malls") to standardize the sales and implementation process, enabling faster global scaling.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="slide-5" class="slide" data-title="Prototype">
+             <div class="w-full max-w-7xl text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-2">Prototype: The Mozart Operations Platform</h2>
+                <p class="text-slate-400 mb-8">Click a sector to view a live-data dashboard concept powered by the Certis integrated platform.</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    <div id="proto-logistics" class="card prototype-card border-2" onclick="selectPrototype('logistics')">
+                        <h4 class="font-bold text-lg text-slate-200">Smart Logistics Hub</h4>
+                    </div>
+                    <div id="proto-healthcare" class="card prototype-card border-2" onclick="selectPrototype('healthcare')">
+                        <h4 class="font-bold text-lg text-slate-200">Healthcare Campus</h4>
+                    </div>
+                    <div id="proto-events" class="card prototype-card border-2" onclick="selectPrototype('events')">
+                         <h4 class="font-bold text-lg text-slate-200">Mega Event Venue</h4>
+                    </div>
+                    <div id="proto-city" class="card prototype-card border-2" onclick="selectPrototype('city')">
+                         <h4 class="font-bold text-lg text-slate-200">Smart City District</h4>
+                    </div>
+                </div>
+                <div id="prototype-display" class="card h-auto md:h-auto min-h-[600px] w-full border-2 border-slate-700 p-6 md:p-8 flex flex-col transition-all duration-500">
+                    <div id="prototype-header" class="text-left mb-6">
+                         <h3 id="prototype-title" class="text-2xl font-bold text-white">Select a Sector to Begin</h3>
+                         <p id="prototype-description" class="text-slate-300 mt-2">The Mozart Operations Dashboard provides a unified view of all integrated services.</p>
+                    </div>
+                    <div id="prototype-dashboard" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 flex-grow">
+                        <div class="flex items-center justify-center text-slate-500 col-span-full h-full min-h-[300px]">
+                            <svg class="w-12 h-12 animate-pulse" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                            <span class="ml-4">Awaiting Sector Selection...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="slide-6" class="slide" data-title="Conclusion">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-10">Strategic Conclusion & Reflection</h2>
+            <div class="card w-full max-w-5xl">
+                <div class="grid md:grid-cols-2 gap-8 text-left">
+                    <div>
+                        <h3 class="font-bold text-xl text-sky-400 mb-4">Summary of Insights</h3>
+                        <ul class="space-y-4 text-slate-300">
+                            <li><strong>Insight 1:</strong> True transformation is a strategic journey from <strong class="text-white">optimizing efficiency</strong> (BPRO®) to <strong class="text-white">creating new integrated value</strong> (Security+).</li>
+                            <li><strong>Insight 2:</strong> "Lighthouse" projects like Jewel are not just sales tools; they are critical for <strong class="text-white">internal validation, capability building, and attracting talent</strong>.</li>
+                             <li><strong>Insight 3:</strong> Culture is the accelerator of technology. Certis’s investment in its people was as crucial as its investment in platforms, enabling them to <strong class="text-white">harmonize man and machine</strong>.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-xl text-sky-400 mb-4">Key Takeaway</h3>
+                        <p class="text-slate-300 mb-4">Certis's triumph lies in its profound evolution from a service provider into a <strong class="text-white highlight">service orchestrator</strong>. They are no longer just selling manpower or technology; they are selling <strong class="text-white highlight">operational intelligence</strong>.</p>
+                        <p class="text-slate-400">By abstracting the immense complexity of physical operations onto a single digital platform, they created a powerful, scalable model that delivers integrated value far exceeding the sum of its siloed parts. The primary challenge ahead is not just technological, but strategic: scaling this model globally while fending off both legacy competitors and new tech-native disruptors. Sustained market leadership will depend on their ability to continually innovate the platform, attract elite talent, and successfully transform Mozart into a true global ecosystem.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const slides = document.querySelectorAll('.slide');
+            const navMenu = document.getElementById('nav-menu');
+            
+            slides.forEach((slide, index) => {
+                const title = slide.getAttribute('data-title');
+                const slideId = slide.id;
+                
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.textContent = title;
+                a.classList.add('nav-link', 'text-slate-400', 'font-medium', 'block', 'text-center', 'md:text-left');
+                if (index === 0) a.classList.add('active');
+                
+                a.addEventListener('click', () => {
+                    document.getElementById(slideId).scrollIntoView({ behavior: 'smooth' });
+                });
+                
+                li.appendChild(a);
+                navMenu.appendChild(li);
+            });
+
+            const navLinks = navMenu.querySelectorAll('.nav-link');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const activeId = entry.target.id;
+                        navLinks.forEach((link, index) => {
+                           const slide = slides[index];
+                           if(slide.id === activeId){
+                               link.classList.add('active');
+                           } else {
+                               link.classList.remove('active');
+                           }
+                        });
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            slides.forEach(slide => {
+                observer.observe(slide);
+            });
+
+            // Revenue Chart
+            const ctx = document.getElementById('revenueChart');
+            if(ctx) {
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['2004', '2021'],
+                        datasets: [{
+                            label: 'Annual Revenue (S$ Million)',
+                            data: [200, 1500],
+                            backgroundColor: 'rgba(56, 189, 248, 0.2)',
+                            borderColor: 'rgba(56, 189, 248, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    color: 'rgb(148, 163, 184)'
+                                },
+                                grid: {
+                                    color: 'rgba(51, 65, 85, 0.5)'
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    color: 'rgb(148, 163, 184)'
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: 'rgb(148, 163, 184)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        const ICONS = {
+            logistics: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="widget-icon"><path d="M10 2v4"/><path d="M14 2v4"/><path d="M10 12v4"/><path d="M14 12v4"/><path d="M4 12h16"/><path d="M2 18h20"/><path d="M6 12v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>',
+            robot: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="widget-icon"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>',
+            alert: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="widget-icon"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>',
+            chart: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="widget-icon"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>',
+            users: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="widget-icon"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+            heart: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="widget-icon"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',
+            shield: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="widget-icon"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+            clock: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="widget-icon"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+            mapPin: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="widget-icon"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+            ticket: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="widget-icon"><path d="M2 9a3 3 0 0 1 0 6v1a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-1a3 3 0 0 1 0-6V8a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg>',
+            briefcase: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="widget-icon"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>',
+            car: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="widget-icon"><path d="M14 16.5V18a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-1.5"/><path d="m5 11 1-1h12l1 1"/><path d="M2 11h20"/><path d="m3 16-1 4 4-1 1-4H3Z"/><path d="m21 16-1 4 4-1 1-4h-4Z"/></svg>',
+            trash: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="widget-icon"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>',
+            wind: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="widget-icon"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>',
+        };
+
+        const prototypeData = {
+            logistics: {
+                title: 'Smart Logistics Hub Dashboard',
+                description: 'Orchestrating inbound/outbound traffic, autonomous vehicle fleets, and warehouse security.',
+                imageUrl: 'https://images.unsplash.com/photo-1587293852726-70cdb120d5ae?q=80&w=1770&auto=format&fit=crop',
+                widgets: [
+                    { icon: ICONS.logistics, title: 'Asset Tracking', value: '1,428', details: 'Active high-value assets tracked via GPS & RFID.', statusClass: 'ok' },
+                    { icon: ICONS.robot, title: 'AGV Fleet Status', value: '98%', details: '24 vehicles active, 1 under maintenance.', statusClass: 'ok' },
+                    { icon: ICONS.alert, title: 'Security Alerts', value: '2 Critical', details: 'Perimeter breach detected at Loading Bay 4.', statusClass: 'critical' },
+                    { icon: ICONS.chart, title: 'Warehouse Efficiency', value: '89%', details: 'Pick & pack rate is 5% above target.', statusClass: 'ok' },
+                ]
+            },
+            healthcare: {
+                title: 'Healthcare Campus Command Center',
+                description: 'Managing patient flow, securing sensitive labs, and ensuring facility uptime for critical care.',
+                imageUrl: 'https://images.unsplash.com/photo-1538108149393-fbbd81895907?q=80&w=1828&auto=format&fit=crop',
+                widgets: [
+                     { icon: ICONS.users, title: 'Patient Admissions', value: '112', details: 'Admitted in the last 24 hours.', statusClass: 'ok' },
+                     { icon: ICONS.clock, title: 'ER Wait Time', value: '28 min', details: 'Average time to see a physician.', statusClass: 'ok' },
+                     { icon: ICONS.heart, title: 'Critical Equipment', value: '100%', details: 'All life-support systems are online.', statusClass: 'ok' },
+                     { icon: ICONS.shield, title: 'Sanitization Tasks', value: '3 Critical', details: 'OR 3 and ICU 5 require immediate attention.', statusClass: 'critical' },
+                ]
+            },
+            events: {
+                title: 'Mega Event Venue Operations',
+                description: 'Real-time crowd management, smart ticketing, and dynamic resource allocation for a seamless visitor experience.',
+                imageUrl: 'https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=1769&auto=format&fit=crop',
+                widgets: [
+                    { icon: ICONS.mapPin, title: 'Live Crowd Density', value: '7.2k', details: 'Capacity at 68%. High density near main stage.', statusClass: 'ok' },
+                    { icon: ICONS.ticket, title: 'Access Control', value: '45/min', details: 'Entry throughput at Gate A.', statusClass: 'ok' },
+                    { icon: ICONS.briefcase, title: 'Staff Deployed', value: '215', details: '198 active, 17 on standby.', statusClass: 'ok' },
+                    { icon: ICONS.alert, title: 'Active Incidents', value: '1 Minor', details: 'Medical assistance requested at Sector B.', statusClass: 'critical' },
+                ]
+            },
+            city: {
+                title: 'Smart City District Control',
+                description: 'Integrating public safety, traffic management, and environmental monitoring for a connected urban experience.',
+                imageUrl: 'https://images.unsplash.com/photo-1542359649-31e03cd7d806?q=80&w=1932&auto=format&fit=crop',
+                widgets: [
+                    { icon: ICONS.car, title: 'Traffic Flow', value: 'Moderate', details: '85% of intersections flowing smoothly.', statusClass: 'ok' },
+                    { icon: ICONS.alert, title: 'Public Safety', value: '0 Critical', details: 'No active high-priority alerts.', statusClass: 'ok' },
+                    { icon: ICONS.trash, title: 'Waste Management', value: '78%', details: 'Smart bin capacity. 12 bins need collection.', statusClass: 'ok' },
+                    { icon: ICONS.wind, title: 'Air Quality Index', value: '35 (Good)', details: 'Low levels of pollutants detected.', statusClass: 'ok' },
+                ]
+            }
+        };
+
+        function selectPrototype(sector) {
+            const data = prototypeData[sector];
+            const dashboard = document.getElementById('prototype-dashboard');
+            
+            document.getElementById('prototype-title').textContent = data.title;
+            document.getElementById('prototype-description').textContent = data.description;
+            
+            const display = document.getElementById('prototype-display');
+            display.style.backgroundImage = `linear-gradient(to top, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.6)), url('${data.imageUrl}')`;
+            display.style.backgroundSize = 'cover';
+            display.style.backgroundPosition = 'center';
+            
+            dashboard.innerHTML = '';
+            data.widgets.forEach(widget => {
+                const widgetEl = document.createElement('div');
+                widgetEl.className = 'widget';
+                widgetEl.innerHTML = `
+                    <div>
+                        ${widget.icon}
+                        <p class="widget-title">${widget.title}</p>
+                    </div>
+                    <div>
+                        <p class="widget-value ${widget.statusClass}">${widget.value}</p>
+                        <p class="widget-details">${widget.details}</p>
+                    </div>
+                `;
+                dashboard.appendChild(widgetEl);
+            });
+            
+            document.querySelectorAll('.prototype-card').forEach(card => card.classList.remove('selected'));
+            document.getElementById(`proto-${sector}`).classList.add('selected');
+        }
+    </script>
+
+</body>
+</html>
